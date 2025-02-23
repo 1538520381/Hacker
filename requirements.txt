@@ -1,0 +1,16 @@
+tempfile
+streamlit
+dotenv
+langchain.agents
+langchain.callbacks.streamlit
+langchain.memory
+langchain_community.chat_message_histories
+langchain_community.document_loaders
+langchain_community.vectorstores
+langchain_core.prompts
+langchain_deepseek
+langchain_text_splitters
+langchain.embeddings.base
+typing
+torch
+transformers
