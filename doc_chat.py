@@ -15,6 +15,7 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 from sentence_transformers import SentenceTransformer
 from transformers import AutoModel
 from embedding import LocalEmbedding
+from langchain_nvidia_ai_endpoints import ChatNVIDIA, NVIDIAEmbeddings
 
 # 设置Streamlit应用的页面标题和布局
 st.set_page_config(page_title="文档回答", layout="wide")
@@ -52,8 +53,10 @@ def configure_retriever(uploaded_files):
     # embedding = SentenceTransformer("BAAI/bge-m3")
     # 指定本地路径（假设模型文件在 ./models/bge-m3 目录下）
     # model_path = "D:\\huggingface\\hub\\models--BAAI--bge-m3\\snapshots\\5617a9f61b028005a4858fdac845db406aefb181"
-    model_path = "./model/hub/models--BAAI--bge-m3/snapshots/5617a9f61b028005a4858fdac845db406aefb181"
-    embedder = LocalEmbedding(model_path)
+    # model_path = "./model/hub/models--BAAI--bge-m3/snapshots/5617a9f61b028005a4858fdac845db406aefb181"
+    # embedder = LocalEmbedding(model_path)
+    # NVIDIAEmbeddings.get_available_models()
+    embedder = NVIDIAEmbeddings(model="nvidia/nv-embed-v1", truncate="END")
     vectordb = FAISS.from_documents(splits, embedder)
 
     # 创建文档检索器
@@ -143,9 +146,8 @@ prompt = base_prompt.partial(instructions=instructions)
 load_dotenv()
 api_key = os.getenv("OPENAI_API_KEY")
 # 创建llm
-llm = ChatDeepSeek(base_url="https://api.deepseek.com/",
-                   model="deepseek-chat",
-                   api_key=api_key, )
+# ChatNVIDIA.get_available_models()
+llm = ChatNVIDIA(model="mistralai/mixtral-8x22b-instruct-v0.1")
 
 # 创建react Agent
 agent = create_react_agent(llm, tools, prompt)
